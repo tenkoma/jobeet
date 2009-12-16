@@ -1,5 +1,11 @@
 # You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/10-Routing
+category:
+  url:      /category/:slug
+  class:    sfDoctrineRoute
+  param:    { module: category, action: show }
+  options:  { model: JobeetCategory, type: object }
+
 job:
   class:   sfDoctrineRouteCollection
   options: { model: JobeetJob }
