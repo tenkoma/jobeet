@@ -5,7 +5,7 @@ include(dirname(__FILE__).'/../../bootstrap/functional.php');
 $browser = new JobeetTestFunctional(new sfBrowser());
 $browser->loadData();
 $max = sfConfig::get('app_max_jobs_on_homepage');
-
+echo sfConfig::get('sf_test_dir');
 $browser->info('1 - The homepage')->
   get('/')->
   with('request')->begin()->
@@ -41,4 +41,25 @@ $browser->info('1 - The homepage')->
     checkElement(sprintf('.category_programming tr:first a[href*="/%d/"]',
       $browser->getMostRecentProgrammingJob()->getId()))->
   end()
+;
+var_dump($browser->getMostRecentProgrammingJob()->getCompanySlug());
+$browser->info('2 - The job page')->
+  info('  2.1 - Each job on the homepage is clickable and give detailed information')->
+  click('Web Developer', array(), array('position' => 1))->
+  with('request')->begin()->
+    isParameter('module', 'job')->
+    isParameter('action', 'show')->
+    isParameter('company_slug', 'sensio-labs')->
+    isParameter('location_slug', 'paris-france')->
+    isParameter('position_slug', 'web-developer')->
+    isParameter('id', $browser->getMostRecentProgrammingJob()->getId())->
+  end()->
+
+  info('  2.2 - A non-existent job forwards the user to a 404')->
+  get('/job/foo-inc/milano-italy/0/painter')->
+  with('response')->isStatusCode(404)->
+
+  info('  2.3 - An expired job page forwards the user to a 404')->
+  get(sprintf('/job/sensio-labs/paris-france/%d/web-developer', $browser->getExpiredJob()->getId()))->
+  with('response')->isStatusCode(404)
 ;

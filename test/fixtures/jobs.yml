@@ -19,7 +19,8 @@ JobeetJob:
     is_activated: true
     token:        job_sensio_labs
     email:        job@example.com
-    expires_at:   '2010-10-10'
+    created_at:   '<?php echo date('Y-m-d H:i:s', strtotime('+1 day')) ?>'
+    expires_at:   '<?php echo date('Y-m-d H:i:s', strtotime('+31 day')) ?>'
 
   job_extreme_sensio:
     JobeetCategory:  design
