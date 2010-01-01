@@ -72,6 +72,6 @@ class JobeetJob extends BaseJobeetJob
 
   public function getDaysBeforeExpires()
   {
-    return floor($this->getDateTimeObject('expires_at')->format('U') / 86400);
+    return floor(($this->getDateTimeObject('expires_at')->format('U') - time()) / 86400);
   }
 }
