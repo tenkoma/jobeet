@@ -93,7 +93,7 @@ $browser->info('3 - Post a Job page')->
   with('form')->begin()->
     hasErrors(false)->
   end()->
-  isRedirected()->
+  with('response')->isRedirected()->
   followRedirect()->
 
   with('request')->begin()->
