@@ -42,7 +42,7 @@ $browser->info('1 - The homepage')->
       $browser->getMostRecentProgrammingJob()->getId()))->
   end()
 ;
-var_dump($browser->getMostRecentProgrammingJob()->getCompanySlug());
+
 $browser->info('2 - The job page')->
   info('  2.1 - Each job on the homepage is clickable and give detailed information')->
   click('Web Developer', array(), array('position' => 1))->
@@ -62,4 +62,42 @@ $browser->info('2 - The job page')->
   info('  2.3 - An expired job page forwards the user to a 404')->
   get(sprintf('/job/sensio-labs/paris-france/%d/web-developer', $browser->getExpiredJob()->getId()))->
   with('response')->isStatusCode(404)
+;
+
+$browser->info('3 - Post a Job page')->
+  info('  3.1 - Submit a Job')->
+
+  get('/job/new')->
+  with('request')->begin()->
+    isParameter('module', 'job')->
+    isParameter('action', 'new')->
+  end()->
+
+  click('Preview your job', array('job' => array(
+    'company'      => 'Sensio Labs',
+    'url'          => 'http://www.sensio.com/',
+    'logo'         => sfConfig::get('sf_upload_dir').'/jobs/sensio-labs.gif',
+    'position'     => 'Developer',
+    'location'     => 'Atlanta, USA',
+    'description'  => 'You will work with symfony to develop websites for our customers.',
+    'how_to_apply' => 'Send me an email',
+    'email'        => 'for.a.job@example.com',
+    'is_public'    => false,
+  )))->
+
+  with('request')->begin()->
+    isParameter('module', 'job')->
+    isParameter('action', 'create')->
+  end()->
+
+  with('form')->begin()->
+    hasErrors(false)->
+  end()->
+  isRedirected()->
+  followRedirect()->
+
+  with('request')->begin()->
+    isParameter('module', 'job')->
+    isParameter('action', 'show')->
+  end()
 ;
