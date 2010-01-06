@@ -14,8 +14,14 @@ generator:
     config:
       actions: ~
       fields:  ~
-      list:    ~
+      list:
+        title: Category Management
+        display: [=name, slug]
+        batch_actions: {}
+        object_actions: {}
       filter:  ~
       form:    ~
-      edit:    ~
-      new:     ~
+      edit:
+        title: Editing Category "%%name%%"
+      new:
+        title: New Category

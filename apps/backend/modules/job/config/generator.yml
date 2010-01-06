@@ -14,8 +14,37 @@ generator:
     config:
       actions: ~
       fields:  ~
-      list:    ~
+      list:
+        title: Job Management
+        layout:  stacked
+        display: [company, position, location, url, is_activated, email]
+        params:  |
+          %%is_activated%% <small>%%jobeet_category%%</small> - %%company%%
+           (<em>%%email%%</em>) is looking for a %%=position%% (%%location%%)
+        fields:
+          is_public:    { label: "Public? (label for the list)" }
+        sort: [expires_at, desc]
+        max_per_page: 10
+        batch_actions:
+          _delete:    ~
+          extend:     ~
+        object_actions:
+          extend:     ~
+          _edit:      ~
+          _delete:    ~
+        actions:
+          deleteNeverActivated: { label: Delete never activated jobs }
+        table_method: retrieveBackendJobList
       filter:  ~
       form:    ~
-      edit:    ~
-      new:     ~
+      edit:
+        title: Editing Job "%%company%% is looking for a %%position%%"
+      new:
+        title: Job Creation
+      fields:
+        is_activated:
+          label: Activated?
+          help: Whether the user has activated the job, or not
+        is_public:
+          label: Public?
+          help: Whether the job can also be published on affiliate websites, or not
