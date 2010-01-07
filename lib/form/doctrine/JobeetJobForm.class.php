@@ -12,13 +12,12 @@ class JobeetJobForm extends BaseJobeetJobForm
 {
   public function configure()
   {
-    unset(
-      $this['created_at'], $this['updated_at'],
-      $this['expires_at'], $this['is_activated'],
-      $this['token']
-    );
+    $this->removeFields();
 
-    $this->validatorSchema['email'] = new sfValidatorEmail();
+    $this->validatorSchema['email'] = new sfValidatorAnd(array(
+      $this->validatorSchema['email'],
+      new sfValidatorEmail(),
+    ));
 
     $this->validatorSchema['type'] = new sfValidatorChoice(array(
       'choices' => array_keys(Doctrine::getTable('JobeetJob')->getTypes()),
@@ -48,5 +47,13 @@ class JobeetJobForm extends BaseJobeetJobForm
       'Whether the job can also be published on affiliate websites or not.');
 
     $this->widgetSchema->setNameFormat('job[%s]');
+  }
+  protected function removeFields()
+  {
+    unset(
+      $this['created_at'], $this['updated_at'],
+      $this['expires_at'], $this['is_activated'],
+      $this['token']
+    );
   }
 }
